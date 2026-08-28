@@ -26,24 +26,55 @@ independent switch you can toggle on or off.
 
 | 分类 Category 分類 | 功能 Feature 機能 |
 | --- | --- |
-| 主页 Home ホーム | 深浅色遮罩只留顶栏（长按呼出设置）/ dark/light mask, top bar kept, long-press = settings / ダーク・ライトのマスクでトップバーのみ表示（長押しで設定画面） |
-| 底栏 Tabs タブ | News / Wallet / Shopping / Mini-Apps 标签隐藏 / hide News, Wallet, Shopping, Mini-Apps tabs / News・Wallet・Shopping・Mini-Apps タブを非表示 |
+| 主页 Home ホーム | 主页整页净化：底栏只留聊天 tab，原顶栏功能下放到底栏功能区（头像昵称→个人资料、服务、通知、设置，直开 LINE 对应页）；昵称可一键隐藏（隐私）；内容网络拦截：getHomeServiceList/getInstantNews 请求直接不发 / home fully purified: chat is the only tab left, top-bar functions move into the bottom-bar area (avatar→Profile, Services, Notifications, Settings via explicit intents); nickname can be hidden for privacy; getHomeServiceList/getInstantNews never sent / ホーム完全浄化：トークタブのみ残し、上バー機能は下バー機能エリアへ（プロフィール/サービス/通知/設定）；ニックネームは非表示化可能（プライバシー） |
+| 底栏 Tabs タブ | 主页净化开启时除聊天外全部隐藏（News / Wallet / Shopping / Mini-Apps 等） / with home purification on, every tab except chat is hidden (News, Wallet, Shopping, Mini-Apps, …) / ホーム浄化オン時はトーク以外のタブ（News・Wallet・Shopping・Mini-Apps 等）をすべて非表示 |
 | 广告 Ads 広告 | 请求源头拦截（getBanners 零流量）+ 广告视图本地折叠 / ad requests blocked at source + ad views collapsed / 広告リクエストを送信元で遮断（getBanners ゼロ通信）＋広告ビューを折りたたみ |
 | 骚扰 Nuisance 迷惑 | 来电本地补响铃声 / local ringtone on incoming call / 着信時にローカルで着信音を再生 |
 | 实验 Experimental 実験 | 防撤回 / 永不回执已读 / 遥测抑制 / 子设备深色主题解锁 / anti-unsend / read receipts never sent / telemetry suppression / dark theme unlock on sub-device / 消去防止 / 既読を送信しない / テレメトリ抑制 / サブ端末のダークテーマ解放 |
 | 界面 UI | 设置页中/日/英三语；风险分级 [A]视图层 [B]协议层 [C]实验性 在每个开关注明 / trilingual settings (CN/JA/EN); risk class [A] view / [B] protocol / [C] experimental on every switch / 設定画面は中・日・英の三言語；各スイッチにリスク区分 [A]ビュー層 [B]プロトコル層 [C]実験的 を明記 |
 
-主页遮罩仅为**视觉遮挡**：被遮内容仍在后台正常加载、照常消耗流量。
-The home mask is visual only — covered content still loads and uses traffic normally.
-ホームのマスクは見た目だけの遮蔽で、下のコンテンツは読み込み続けます。
+v1.6.0 起主页净化 = **底栏版**：底栏只留聊天一个 tab（主页等其余 tab 全部隐藏，
+聊天自动左对齐），原主页顶栏的功能下放到底栏右侧的功能区——头像+账户昵称
+（contacts 库只读查询，可在设置里一键隐藏以保护隐私）打开个人资料，「服务 /
+通知 / 设置」三枚照原顶栏重绘的图标，显式 Intent 直开 LINE 对应页面（类名取自
+manifest 明文，不依赖混淆类名；通知中心 26.13.0 的新类名带 26.11.0 回退候选）。
+功能区配色按底栏实际明暗自动适配（读底栏背景图像素、无监听；LINE 主题独立于
+系统设置，另备手动浅色开关）、垂直居中对齐可见底栏（运行时测量锚点，适配任意
+分辨率与手势条模式）。冷启动直接落在聊天页（对聊天 tab 注入合成触摸，由 LINE
+自身控制器解析页面位置，免疫页序漂移）。网络层拦截同步保留：getHomeServiceList /
+getInstantNews 请求直接不发——主页不可达后自然零流量。
+Since v1.6.0 home purification = the **bottom-bar edition**: the chat tab is the
+only tab left in the bottom bar (home and every other tab hidden, chat left-aligned),
+and the former home top-bar functions move into a function area on the right of
+the bar — avatar + nickname (read-only contacts DB query, hideable in settings for
+privacy) opens your profile, and Services / Notifications / Settings icons (redrawn)
+open LINE pages via explicit intents (26.13.0 names with 26.11.0 fallbacks). The
+area follows the bar's actual light/dark appearance (auto-detected from the bar
+background bitmap, no listeners; manual light override provided since LINE's
+in-app theme is independent of the system setting), is vertically centered on the visible bar
+(runtime-measured anchors, any resolution / gesture-bar mode), and cold starts land
+directly on the chat page (a synthetic tap on the chat tab lets LINE's own
+controller resolve the page position — immune to page-order drift).
+Network blocking stays: getHomeServiceList / getInstantNews are never sent — with
+home unreachable that is naturally zero traffic.
+v1.6.0 からホーム浄化は**下バーエディション**：下バーにはトークタブだけを残し
+（ホーム等の他タブはすべて非表示、トークは左寄せ）、旧ホーム上バーの機能は
+下バー右侧の機能エリアへ——アバター＋ニックネーム（連絡先 DB を読み取り専用
+照会、設定で非表示化できプライバシー保護）でプロフィール、サービス / 通知 /
+設定の 3 アイコンは明示的 Intent で直接起動します。機能エリアは下バーの実際の
+明暗を自動判定（下バー背景ビットマップから読み取り、リスナー常駐なし）して
+配色し、可視バーに対して垂直中央揃え（実行時測定アンカー、解像度・ジェスチャー
+バー不問）。コールドスタートは直接トークページに着地します。通信遮断
+（getHomeServiceList / getInstantNews 送信せず）も継続です。
 
 ## 环境要求 / Requirements / 環境要件
 
 * 已 root 设备：Magisk / KernelSU + Zygisk + **LSPosed**。
   A rooted device: Magisk / KernelSU + Zygisk + LSPosed.
   root済み端末（Magisk / KernelSU + Zygisk + LSPosed）。
-* LINE **26.11.0**（实测校准版本）。
-  LINE **26.11.0** (the calibrated build).  LINE **26.11.0**（動作確認済み）。
+* LINE **26.11.0**（逐字节校准）；**26.13.0** 实测全量命中。
+  LINE **26.11.0** (byte-calibrated); **26.13.0** verified working.
+  LINE **26.11.0**（校準済み）。**26.13.0** でも動作を確認。
 
 > 混淆类名随版本可能漂移，功能会静默失效而不崩溃。在 LSPosed 日志过滤 `LineTamer`
 > 查看 `version check ok: 26.11.0` 与各 `armed` 行确认 Hook 命中。
@@ -60,9 +91,9 @@ The home mask is visual only — covered content still loads and uses traffic no
    LSPosed でモジュールを有効化し、スコープに「LINE」を指定。
 2. 强制停止 LINE 后重新打开。
    Force-stop LINE and reopen it.  LINE を強制終了して再起動。
-3. 设置入口：桌面图标，或主页遮罩长按 ≈1 秒。
-   Settings: launcher icon, or long-press the home mask (~1s).
-   設定: ランチャーアイコン、またはホームのマスクを長押し（約1秒）。
+3. 设置入口：桌面图标；主页文字栏显示时也可长按文字栏 ≈1 秒。
+   Settings: launcher icon; with the home top bar visible, long-press the bar (~1s).
+   設定: ランチャーアイコン。ホームの文字バー表示中はバー長押し（約1秒）でも可。
 
 > 权限说明 / Permissions note / 権限について：Hook 过程不执行任何 root 操作。仅设置页保存开关时可能请求
 > root 同步一份全局配置副本；拒绝不影响功能，配置自动落到其它副本路径。
@@ -107,7 +138,7 @@ app/src/main/java/com/tamer/linetamer/
 │   ├── ThriftGate           # Thrift 漏斗：广告拦截/已读/遥测/防撤回 / Thrift funnel: ads/read/tracking/unsend / Thrift 漏斗：広告・既読・テレメトリ・消去防止
 │   ├── AdViewBlocker        # 广告视图折叠 + addView 扫描再隐藏 / ad-view collapse + addView rescan / 広告ビュー折りたたみ＋addView 再スキャン
 │   ├── HomeTabHider         # 底栏标签隐藏（含 tab-inventory 校准日志）/ bottom-tab hiding (+tab-inventory log) / 下部タブ非表示（tab-inventory ログ付き）
-│   ├── HomeBlanker          # 主页遮罩 + 长按设置入口 / home mask + long-press settings / ホームマスク＋長押し設定
+│   ├── HomeTopBar           # 主页整页折叠 + 原生顶栏 / home collapse + native top bar / ホーム折りたたみ＋ネイティブ上バー
 │   ├── CallTone / SyncGuard / DarkModeHooks / HostCtx
 └── ui/SettingsActivity.java # 纯代码三语设置页 / code-only trilingual settings / コードのみの三言語設定画面
 tools/                       # 构建流水线 / build pipeline / ビルドパイプライン
