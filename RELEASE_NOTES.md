@@ -1,3 +1,49 @@
+# LineTamer v1.6.1（versionCode 19）
+
+校准目标：LINE **26.11.0 / 26.13.0** / Calibrated against LINE **26.11.0 / 26.13.0** / 校準対象：LINE **26.11.0 / 26.13.0**
+
+⚠ AI-generated module / 本模块由 AI 生成，代码未经人工长期审计，请自行评估风险。
+
+---
+
+## 中文
+
+**配置通道最小权限化：不给 root 也完整可配置**
+
+- 修复：底栏功能区「显示账户昵称（隐私）」开关失效。根因：陈旧的 root 兜底副本（/data/local/tmp）在无代次读序下永久反盖设置页新值——开关本身从未坏，是配置读错了来源。
+- **conf_gen 配置代次协议**：设置页每次保存给 SP 与全部副本盖章（毫秒时间戳），Hook 端选最新代次，陈旧副本永不反盖。
+- **无 root 主链路**：设置页以带配置 extras 的启动 Intent 投递给 LINE，Hook 在宿主进程内把配置写入宿主自有存储；此后每次启动读宿主副本。不给模块 root 也完整可配置。
+- 多路冗余：ConfigProvider（标准 ContentProvider 只读 SP）与共享媒体目录副本并存；部分 OEM 会封杀 Provider 导出/运行时 URI 授权/跨应用媒体读取（Honor MagicOS 实测三连封），通道互为备份，gen 协议仲裁。
+- root 降级为**开发兜底**（仅 /data/local/tmp 副本），拒绝 root 不影响任何功能。
+- 副本解析严格化：非 true/false 的键一律跳过，传输损坏的副本不可能把模块拨成关闭。
+- 附带：主页净化主开关运行中拨关后不再重复挂载功能区；设置页开关保存即自动投递。
+
+## 日本語
+
+**設定チャネルの最小権限化：root なしで完全に設定可能**
+
+- 修正：下バー機能エリアの「アカウント名を表示（プライバシー）」スイッチが効かなかった問題。原因は古い root フォールバックコピー（/data/local/tmp）が世代情報のない読み込み順で新しい設定を永久に上書きしていたこと——スイッチ自体は壊れておらず、設定の読み出し元が間違っていた。
+- **conf_gen 世代プロトコル**：設定画面は保存のたびに SP と全コピーへミリ秒タイムスタンプを押印し、Hook 側は最新世代を選択。古いコピーが新設定を覆すことは二度とない。
+- **root 不要のメイン経路**：設定画面が extras 付きの起動 Intent で LINE へ設定を投递し、Hook がホストプロセス内でホスト自身のストレージに保存。以降の起動はホストコピーを読む。モジュールに root を付与しなくても完全に設定可能。
+- 多重冗長：ConfigProvider（標準 ContentProvider の読み取り専用 SP）と共有メディアディレクトリ副本を併設。一部 OEM は Provider エクスポート/実行時 URI 許可/クロスアプリ媒体読取を封じる（Honor MagicOS で三連封を実確認）が、経路は互いにバックアップし gen プロトコルで仲裁。
+- root は**開発用フォールバック**（/data/local/tmp 副本のみ）に降格。拒否しても機能は一切壊れない。
+- コピー解析の厳格化：true/false 以外のキーはすべてスキップし、破損コピーでモジュールが無効化されることはない。
+- 付随：ホーム浄化の主スイッチを実行中に OFF しても機能エリアを再マウントしない。設定画面のスイッチは保存と同時に自動投递。
+
+## English
+
+**Config channel least-privilege: fully configurable without root**
+
+- Fixed: the bottom-bar function area's "Show account nickname (privacy)" switch did nothing. Root cause: a stale root-written fallback copy (/data/local/tmp) permanently shadowed fresh settings under the generation-less read order — the switch was never broken, the config was read from the wrong source.
+- **conf_gen generation protocol**: every save stamps the SP and all copies with a millisecond timestamp; the Hook picks the newest generation and a stale copy can never win again.
+- **Rootless main path**: the settings page delivers the config to LINE via a launch intent with extras; the Hook persists it into the host's own storage in-process. Every later launch reads the host copy. The module is fully configurable without granting root.
+- Redundant channels: a ConfigProvider (standard read-only ContentProvider over the SP) and a shared-media-dir copy coexist; some OEMs kill provider export / runtime URI grants / cross-app media reads (Honor MagicOS, all three verified) — the channels back each other up and the gen protocol arbitrates.
+- Root demoted to a **dev fallback** (the /data/local/tmp copy only); denying root breaks nothing.
+- Strict copy parsing: keys whose value is not true/false are skipped — a corrupted copy can no longer switch the module off.
+- Also: toggling the home-purify master switch off at runtime no longer re-mounts the function area; settings switches deliver automatically on save.
+
+---
+
 # LineTamer v1.6.0（versionCode 18）
 
 校准目标：LINE **26.11.0 / 26.13.0**（两版实机全量验证，持续跨版本适配）/ Calibrated against LINE **26.11.0 / 26.13.0** (both fully verified on device; cross-version adaptation ongoing) / 校準対象：LINE **26.11.0 / 26.13.0**（いずれも実機検証済み、継続的なクロスバージョン対応）
