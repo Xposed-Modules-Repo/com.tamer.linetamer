@@ -12,14 +12,14 @@
 > このプロジェクトは人間の指示のもと大規模言語モデル（AI）が生成・継続改良しています。
 > コードは長期間の人間監査を受けていません。利用は自己責任でお願いします。
 
-面向 **LINE**（`jp.naver.line.android` 26.11.0）的功能精简 LSPosed 模块。
+面向 **LINE**（`jp.naver.line.android` 26.11.0 / 26.13.0，持续跨版本适配）的功能精简 LSPosed 模块。
 设计原则：聊天与通话永远可用；其余功能全部提供独立开关，可随时屏蔽/恢复。
 
-An LSPosed module that trims **LINE** (`jp.naver.line.android` 26.11.0).
+An LSPosed module that trims **LINE** (`jp.naver.line.android` 26.11.0 / 26.13.0, cross-version support is ongoing).
 Design principle: chat & calls always keep working; every other feature is an
 independent switch you can toggle on or off.
 
-**LINE**（`jp.naver.line.android` 26.11.0）向けの機能削減 LSPosed モジュールです。
+**LINE**（`jp.naver.line.android` 26.11.0 / 26.13.0、継続的にクロスバージョン対応）向けの機能削減 LSPosed モジュールです。
 トークと通話は常に使えます。その他の機能はすべて独立スイッチで個別に切り替えられます。
 
 ## 功能一览 / Features / 機能一覧
@@ -72,9 +72,9 @@ v1.6.0 からホーム浄化は**下バーエディション**：下バーには
 * 已 root 设备：Magisk / KernelSU + Zygisk + **LSPosed**。
   A rooted device: Magisk / KernelSU + Zygisk + LSPosed.
   root済み端末（Magisk / KernelSU + Zygisk + LSPosed）。
-* LINE **26.11.0**（逐字节校准）；**26.13.0** 实测全量命中。
-  LINE **26.11.0** (byte-calibrated); **26.13.0** verified working.
-  LINE **26.11.0**（校準済み）。**26.13.0** でも動作を確認。
+* LINE **26.11.0**／**26.13.0**（两版逐字节校准，实机全量验证）。目标：跨版本持续适配。
+  LINE **26.11.0** / **26.13.0** (both byte-calibrated, fully verified on device); cross-version adaptation ongoing.
+  LINE **26.11.0**／**26.13.0**（いずれも実機検証済み）。継続的なクロスバージョン対応。
 
 > 混淆类名随版本可能漂移，功能会静默失效而不崩溃。在 LSPosed 日志过滤 `LineTamer`
 > 查看 `version check ok: 26.11.0` 与各 `armed` 行确认 Hook 命中。

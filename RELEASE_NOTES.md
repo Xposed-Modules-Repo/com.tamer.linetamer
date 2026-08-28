@@ -1,6 +1,6 @@
 # LineTamer v1.6.0（versionCode 18）
 
-校准目标：LINE 26.11.0，已在 26.13.0 实机全量验证 / Calibrated against LINE 26.11.0, fully verified on 26.13.0 / LINE 26.11.0 基準、26.13.0 で実機検証済み
+校准目标：LINE **26.11.0 / 26.13.0**（两版实机全量验证，持续跨版本适配）/ Calibrated against LINE **26.11.0 / 26.13.0** (both fully verified on device; cross-version adaptation ongoing) / 校準対象：LINE **26.11.0 / 26.13.0**（いずれも実機検証済み、継続的なクロスバージョン対応）
 
 ⚠ AI-generated module / 本模块由 AI 生成，代码未经人工长期审计，请自行评估风险。
 
@@ -59,7 +59,7 @@
 ## 环境要求 / Requirements / 環境要件
 
 - 已 root + Zygisk + LSPosed / rooted device with Zygisk + LSPosed / root 済み + Zygisk + LSPosed
-- LINE 26.11.0 / 26.13.0（其他版本 hook 可能漂移 / other versions may drift / 他バージョンはずれる可能性）
+- LINE 26.11.0 / 26.13.0（两版均已校准；其他版本 hook 可能漂移，跨版本适配持续进行 / both calibrated; other versions may drift, cross-version adaptation ongoing / 両バージョン対応済み、他バージョンはずれる可能性あり）
 
 安装后请在 LSPosed 勾选作用域「LINE」并强制停止 LINE 后重开。
 After install, select LINE in the module scope list, then force-stop and reopen it.
