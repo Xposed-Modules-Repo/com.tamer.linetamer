@@ -1,3 +1,42 @@
+# LineTamer v1.6.2（versionCode 20）
+
+适配目标：LSPosed **v2.2.0 (7854)** / Targeting LSPosed **v2.2.0 (7854)** / 対応対象：LSPosed **v2.2.0 (7854)**
+
+⚠ AI-generated module / 本模块由 AI 生成，代码未经人工长期审计，请自行评估风险。
+
+---
+
+## 中文
+
+**适配 LSPosed v2.2.0 (7854)：退出 New XSharedPreferences（nsp）废弃通道**
+
+- 背景：LSPosed v2.2.0 为 legacy 模块加入废弃警告——判定条件是「legacy 模块声明 nsp 支持（xposedsharedprefs）且存在其它用户可读的 XML」，且 New XSharedPreferences 计划 v2.3.0 正式移除。本模块三条全中（legacy API + 声明了 nsp + makeWorldReadable 生成 others 可读 XML）。
+- 按官方指引修改 manifest：`xposedminversion` 93 → **82**，并**删除 `xposedsharedprefs` 声明**——模块页不再出现废弃警告，2.3.0 移除 nsp 也不受影响。
+- 功能无损：nsp/XSP 从来不是唯一通道。无 root 主链路（设置页 Intent 投递 → 宿主自有副本）、ConfigProvider（标准 ContentProvider 只读 SP）、共享媒体目录副本、模块 files 副本全部不受影响，conf_gen 代次协议继续仲裁。
+- Hook 端 XSharedPreferences 保留为旧版 LSPosed 的兜底读取（带代次竞争），新版上自动空读并由其余通道接管，代码无需条件分支。
+- 顺带：设置页 MODE_WORLD_READABLE 改为纯兼容尝试（现版本必现 SecurityException，回退 MODE_PRIVATE，不影响任何通道）。
+
+## 日本語
+
+**LSPosed v2.2.0 (7854) への対応：New XSharedPreferences（nsp）廃止チャネルから離脱**
+
+- 背景：LSPosed v2.2.0 はレガシーモジュールのうち「nsp 対応宣言（xposedsharedprefs）＋他ユーザー読み取り可能な XML」の条件に該当するものへ非推奨警告を表示し、New XSharedPreferences は v2.3.0 で正式削除予定。本モジュールは三条件すべて該当していた。
+- 公式ガイドに従い manifest を修正：`xposedminversion` 93 → **82**、`xposedsharedprefs` 宣言を**削除**。警告は表示されなくなり、2.3.0 の削除の影響も受けない。
+- 機能への影響なし：root 不要のメイン経路（設定 Intent の投递 → ホストコピー）、ConfigProvider、共有メディア副本、files 副本はすべて無関係。conf_gen 世代プロトコルは従来どおり仲裁する。
+- Hook 側の XSharedPreferences は旧版 LSPosed 向けフォールバックとして残置。新版では空読みになり他チャネルが自動的に接管する。
+
+## English
+
+**LSPosed v2.2.0 (7854) compatibility: leave the deprecated New XSharedPreferences (nsp) channel**
+
+- Background: LSPosed v2.2.0 adds a deprecation warning for legacy modules that both declare nsp support (xposedsharedprefs) and ship an others-readable XML, and New XSharedPreferences is scheduled for removal in v2.3.0. This module matched all criteria (legacy API + nsp declared + makeWorldReadable producing an others-readable XML).
+- Manifest fixed per the official guidance: `xposedminversion` 93 → **82** and the `xposedsharedprefs` meta-data **removed** — no more deprecation warning, and the 2.3.0 removal breaks nothing.
+- No functional loss: nsp/XSP was never the only channel. The rootless main path (settings Intent delivery → host-owned copy), the ConfigProvider (standard read-only ContentProvider over the SP), the shared-media copy and the module files copy are all unaffected; the conf_gen protocol keeps arbitrating.
+- The hook-side XSharedPreferences stays as a fallback for older LSPosed builds; on new builds it reads empty and the other channels take over automatically.
+- Also: the settings page now treats MODE_WORLD_READABLE as a pure compatibility attempt (it always throws SecurityException on current LSPosed and falls back to MODE_PRIVATE; no channel depends on it).
+
+---
+
 # LineTamer v1.6.1（versionCode 19）
 
 校准目标：LINE **26.11.0 / 26.13.0** / Calibrated against LINE **26.11.0 / 26.13.0** / 校準対象：LINE **26.11.0 / 26.13.0**

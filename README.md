@@ -95,13 +95,22 @@ v1.6.0 からホーム浄化は**下バーエディション**：下バーには
    Settings: launcher icon; with the home top bar visible, long-press the bar (~1s).
    設定: ランチャーアイコン。ホームの文字バー表示中はバー長押し（約1秒）でも可。
 
-> 权限说明 / Permissions note / 権限について：Hook 过程不执行任何 root 操作。仅设置页保存开关时可能请求
-> root 同步一份全局配置副本；拒绝不影响功能，配置自动落到其它副本路径。
-> No root operations while hooking; root is only requested when saving switches to
-> sync a global config copy — denying it falls back automatically.
-> フック中に root 操作は行いません。設定画面でスイッチを保存するときだけ root を要求し、
-> グローバル設定のコピーを同期します。拒否しても機能は壊れず、設定は自動的に他の場所へ
-> フォールバックします。
+> 权限说明 / Permissions note / 権限について：Hook 过程不执行任何 root 操作；不给模块 root
+> 也能正常配置（最小权限原则）。配置链路：设置页写入 SP 并以带配置 extras 的启动
+> Intent 投递给 LINE → Hook 在宿主进程内把配置写入宿主自有存储（conf_gen 代次协议
+> 保证宿主副本永远优先于任何陈旧副本）。root 仅用于可选的开发兜底副本
+> （/data/local/tmp），拒绝不影响任何功能。
+> No root operations while hooking; the module is fully configurable WITHOUT root
+> (least privilege). Config chain: the settings page writes the SP and delivers the
+> config to LINE via a launch intent with extras; the Hook persists it into the
+> host's own storage (the conf_gen protocol keeps the host copy ahead of any stale
+> one). Root is only an optional dev fallback (/data/local/tmp) — denying it breaks
+> nothing.
+> フック中に root 操作は行いません。root を付与しなくても設定は完全に機能します
+> （最小権限）。設定チェーン：設定画面が SP に書き込み、extras 付きの起動 Intent
+> で LINE へ投递、Hook がホスト自身のストレージに保存します（conf_gen プロトコル
+> により古いコピーは常に棄却）。root は開発用フォールバック（/data/local/tmp）の
+> みで、拒否しても機能に影響しません。
 
 ## 从源码构建 / Build / ビルド
 
